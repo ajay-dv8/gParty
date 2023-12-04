@@ -67,6 +67,11 @@ const ProfilePage = () => {
 
             <div className="pt-[6rem] px-4">
               <h2 className="text-2xl font-semibold text-white">username</h2>
+              <p className="mt-1 text-xs text-gray-400">@username</p>
+              <p className="mt-3 text-white">bio</p>
+
+              
+
             </div>
 
           </div> 
