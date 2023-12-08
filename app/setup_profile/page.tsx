@@ -15,6 +15,8 @@ const SetupProfile = async () => {
     const first_name = formData.get('first_name') as string
     const last_name = formData.get('last_name') as string
     const username = formData.get('username') as string
+    const website = formData.get('website') as string
+    const bio = formData.get('bio') as string
     const cookieStore = cookies()
     const supabase = createClient(cookieStore) 
 
@@ -32,6 +34,8 @@ const SetupProfile = async () => {
       { 
         full_name : first_name + " " + last_name,
         username : username,
+        website : website,
+        bio : bio,
       },
     ])
     .eq('id', user.data.user?.id)
