@@ -1,3 +1,4 @@
+
 import DeployButton from '../components/DeployButton'
 import AuthButton from '../components/AuthButton'
 import { createClient } from '@/utils/supabase/server'
@@ -6,51 +7,46 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { redirect } from 'next/navigation'
-
+//import { useEffect } from 'react'
+//import { signIn } from '@/components/singnInServerComponent'
 import Link from 'next/link'
 
+
 export default async function Index() {
-  const cookieStore = cookies()
+   const cookieStore = cookies()
+   const supabase = createClient(cookieStore)
+   const user = await supabase.auth.getUser()
 
-  const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
-    try {
-      createClient(cookieStore)
-      return true
-    } catch (e) {
-      return false
-    }
-  }
+   if(user) {
+    return redirect('/home')
+   }
 
-  const isSupabaseConnected = canInitSupabaseClient()
+   const signIn = async (formData: FormData) => {
+     'use server'
 
-  const signIn = async (formData: FormData) => {
-    'use server'
+     const email = formData.get('email') as string
+     const password = formData.get('password') as string
+     const cookieStore = cookies()
+     const supabase = createClient(cookieStore)
 
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
+     const { error } = await supabase.auth.signInWithPassword({
+       email,
+       password,
+     })
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+     if (error) {
+       return redirect('/login?message=Could not authenticate user')
+     }
 
-    if (error) {
-      return redirect('/login?message=Could not authenticate user')
-    }
-
-    return redirect('/')
-  }
+     return redirect('/home')
+   }
 
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           <DeployButton />
-          {isSupabaseConnected && <AuthButton />}
+           <AuthButton />
         </div>
       </nav>
 

@@ -1,8 +1,11 @@
-import { headers, cookies } from 'next/headers'
+import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
 import { Label } from "@/components/ui/label"
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 const SetupProfile = async () => {
 
@@ -22,6 +25,7 @@ const SetupProfile = async () => {
       return redirect('/setup_profile?message=Could not authenticate user')
     }
 
+    //insert user info to profiles table in db
     const { data, error } = await supabase
     .from('profiles')
     .update([
@@ -33,7 +37,6 @@ const SetupProfile = async () => {
     .eq('id', user.data.user?.id)
     .select("*")
     console.log("data is", data, "user is", user)
-        
 
     if (error) {
       console.error(error)
@@ -55,8 +58,8 @@ const SetupProfile = async () => {
           <Label className="text-md" htmlFor="email">
             First name
           </Label>
-          <input
-            className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          <Input
+            className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
             name="first_name"
             placeholder="First name"
             required
@@ -64,11 +67,11 @@ const SetupProfile = async () => {
         </div>
 
         <div className='flex flex-col'>
-          <label className="text-md" htmlFor="email">
+          <Label className="text-md" htmlFor="email">
             Last name
-          </label>
-          <input
-            className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          </Label>
+          <Input
+            className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
             name="last_name"
             placeholder="Last name"
             required
@@ -77,20 +80,40 @@ const SetupProfile = async () => {
 
       </div>
 
-        <label className="text-md" htmlFor="email">
+        <Label className="text-md" htmlFor="email">
           Username
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        </Label>
+        <Input
+          className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
           name="username"
           placeholder="Username"
           required
         />
 
-        <button 
-          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2">
-          Sign Up
-        </button>
+        <Label className="text-md" htmlFor="email">
+          Bio
+        </Label>
+        <Textarea
+          className="rounded-md px-4 py-2 text-lg bg-inherit border mb-6 resize-none"
+          name="bio"
+          placeholder="Bio"
+        />
+
+        <Label className="text-md" htmlFor="email">
+          Website
+        </Label>
+        <Input
+          className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
+          name="website"
+          placeholder="https://website.com"
+          required
+        />
+
+        <Button 
+          
+          className="text-lg">
+          Submit
+        </Button>
 
       </form>
     </div>

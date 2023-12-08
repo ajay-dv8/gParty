@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { headers, cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { Label } from '@/components/ui/label'
 
 export default function Signup({
   searchParams,

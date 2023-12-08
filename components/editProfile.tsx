@@ -1,7 +1,13 @@
+import { Input } from "./ui/input"
 
 const EditProfile = () => {
   return (
-    <div>editProfile</div>
+    <div className="">
+      <form className="">
+        <Input 
+          name="first"/>
+      </form>
+    </div>
   )
 }
 
