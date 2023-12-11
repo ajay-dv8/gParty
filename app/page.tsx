@@ -15,9 +15,10 @@ import Link from 'next/link'
 export default async function Index() {
    const cookieStore = cookies()
    const supabase = createClient(cookieStore)
-   const user = await supabase.auth.getUser()
 
-   if(user) {
+   const {data: {user}} = await supabase.auth.getUser()
+
+   if (user) {
     return redirect('/home')
    }
 

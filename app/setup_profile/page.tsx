@@ -6,6 +6,10 @@ import { Label } from "@/components/ui/label"
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { FileEdit, User } from 'lucide-react'
+import PrevPageBtn from '@/components/previousPageBtn'
 
 const SetupProfile = async () => {
 
@@ -17,10 +21,11 @@ const SetupProfile = async () => {
     const username = formData.get('username') as string
     const website = formData.get('website') as string
     const bio = formData.get('bio') as string
+    
     const cookieStore = cookies()
     const supabase = createClient(cookieStore) 
 
-    const user  = await supabase.auth.getUser();
+    const {data: {user}}  = await supabase.auth.getUser();
 
     if (!user) {
       console.error("Could not authenticate user")
@@ -38,7 +43,7 @@ const SetupProfile = async () => {
         bio : bio,
       },
     ])
-    .eq('id', user.data.user?.id)
+    .eq('id', user.id)
     .select("*")
     console.log("data is", data, "user is", user)
 
@@ -52,10 +57,41 @@ const SetupProfile = async () => {
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+      
+      <div className="flex justify-between">
+        <div className="flex">
+          Edit Profile
+        </div>
+        <div className="flex">
+          <PrevPageBtn/>
+        </div>
+      </div>
+
       <form
         action={handleSubmitProfile}
         className="flex flex-col justify-center text-foreground p-2"
       >
+        <Image 
+          src={''} 
+          alt={''}
+          className="Banner-Img bg-green-500 w-full h-40" 
+        />
+
+        <div className="bannerNavater">
+
+          <div className='relative top-[-4.7rem] left-[1.2rem]'>  
+            <Avatar className="w-16 h-16 border-4">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>
+                <User size="16"/>
+              </AvatarFallback>
+            </Avatar>   
+            <input type="file" className='hidden bg-[]'/> 
+                 
+  
+          </div>
+        </div>
+       
       <div className='flex flex-row gap-x-4'>
 
         <div className='flex flex-col'>
@@ -66,7 +102,6 @@ const SetupProfile = async () => {
             className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
             name="first_name"
             placeholder="First name"
-            required
           />
         </div>
 
@@ -78,7 +113,6 @@ const SetupProfile = async () => {
             className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
             name="last_name"
             placeholder="Last name"
-            required
           />
         </div>
 
@@ -91,7 +125,6 @@ const SetupProfile = async () => {
           className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
           name="username"
           placeholder="Username"
-          required
         />
 
         <Label className="text-md" htmlFor="email">
@@ -110,13 +143,11 @@ const SetupProfile = async () => {
           className="rounded-md text-lg px-4 py-2 bg-inherit border mb-6"
           name="website"
           placeholder="https://website.com"
-          required
         />
 
         <Button 
-          
           className="text-lg">
-          Submit
+          Save
         </Button>
 
       </form>
