@@ -1,10 +1,8 @@
 'use client';
-import { fetchAccount } from "@/app/routes/fetchAccount/route";
 import { Button } from "@/components/ui/button"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import user from '@/public/icons/user.png'
 import Image from "next/image"
-import { useEffect, useState } from "react";
 
 export default function Component({userAccountData}: any) {
 

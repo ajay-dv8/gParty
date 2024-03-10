@@ -179,12 +179,9 @@ const Account = ({userAccountData}: any) => {
           <Label htmlFor="country">Country</Label>
           <Select
             name='selectedCountry'
-            defaultValue={selectedCountry}
+            defaultValue={userAccountData?.selectedCountry}
           >
-          <SelectTrigger className="w-full" onChange={(e:any) => {
-            setSelectedCountry(e.target.value);
-            console.log('selectedCountry:', e.target.value);
-          }}>
+          <SelectTrigger className="w-full" >
             <SelectValue 
               className='text-black bg-white' 
               placeholder={userAccountData ? userAccountData?.country : 'Select country'}
