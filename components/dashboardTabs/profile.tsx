@@ -6,23 +6,21 @@ import user from '@/public/icons/user.png'
 import Image from "next/image"
 import { useEffect, useState } from "react";
 
-export default function Component() {
-  const [accountData, setAccountData] = useState<any | undefined>({});
-  const [isLoading, setIsLoading] = useState(false)
+export default function Component({userAccountData}: any) {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchAccount();
-        setAccountData(data);
-      } catch (error) {
-        console.error('Error fetching account data:', error);
-        // Handle errors as needed, e.g., display an error message
-      }
-    };
-    console.log('Profile accData', accountData)
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await fetchAccount();
+  //       setAccountData(data);
+  //     } catch (error) {
+  //       console.error('Error fetching account data:', error);
+  //       // Handle errors as needed, e.g., display an error message
+  //     }
+  //   };
+  //   console.log('Profile accData', accountData)
+  //   fetchData();
+  // }, []);
   
   return (
     <div className="flex flex-col h-screen w-full">   
@@ -39,8 +37,8 @@ export default function Component() {
                   src={user}
                 />
                 <div className="space-y-1">
-                  <h1 className="text-2xl font-semibold">{accountData?.full_name}</h1>
-                  <h1 className="text-sm">@{accountData?.username}</h1>
+                  <h1 className="text-2xl font-semibold">{userAccountData?.full_name}</h1>
+                  <h1 className="text-sm">@{userAccountData?.username}</h1>
                   <p className="text-gray-500 text-sm dark:text-gray-400">
                     Software Engineer | Music Lover | Travel Enthusiast
                   </p>
@@ -72,7 +70,7 @@ export default function Component() {
                 
                 <CardContent className="text-sm">
                   <p>
-                    {accountData?.bio}
+                    {userAccountData?.bio}
                   </p>
                 </CardContent>
               </Card>

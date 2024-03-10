@@ -7,14 +7,12 @@ import { useEffect, useState } from 'react'
 import { fetchAccount } from '@/app/routes/fetchAccount/route';
 import { updateAccount } from '@/app/routes/updateAccount/route';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
- import Image from 'next/image';
 
-interface Country {
-  name?: string;
-  // other properties...
-}
-
-const Account = () => {
+/*
+- fix phone country code selection
+- set country code when user selects a country in the select box.
+*/
+const Account = ({userAccountData}: any) => {
 
   const [full_name, setFull_name ] = useState('');
   const [phone, setPhone] = useState('');
@@ -31,7 +29,7 @@ const Account = () => {
     errorMessage: ''
   });
   
-  const [accountData, setAccountData] = useState<any | undefined>({});
+  //const [userAccountData, setUserAccountData] = useState<any | undefined>({});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -66,18 +64,18 @@ const Account = () => {
   }, []);
   
   // fetch accountData
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchAccount();
-        setAccountData(data);
-      } catch (error) {
-        console.error('Error fetching account data:', error);
-      }
-    };
-    console.log('accountData', accountData)
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await fetchAccount();
+  //       setUserAccountData(data);
+  //     } catch (error) {
+  //       console.error('Error fetching account data:', error);
+  //     }
+  //   };
+  //   console.log('accountData', userAccountData)
+  //   fetchData();
+  // }, []);
 
   const { loading, errorMessage, countries } = country;
   console.log("loading", loading);
@@ -94,6 +92,7 @@ const Account = () => {
     return false;
   });
 
+  // get the selected country and save it to state
   useEffect(() => {
     if (selectedCountry) {
       const getSelectedCountry: any = countries.find((countries: any) => {
@@ -106,17 +105,20 @@ const Account = () => {
     }
   }, [selectedCountry]);
 
-
-  const handleSubmit = async (event: { preventDefault: () => void; } | any) => {
+  // handle form submission/update
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target);
-    // Call your createParty function here
+    
     await updateAccount(formData);
     setIsLoading(false);
-  }
+  };
 
-  
+  // if (!userAccountData) {
+  //   return <div>Loading...</div>;
+  // }
+
   return (
     <div className="container grid gap-4 px-4 mx-auto md:gap-8 lg:max-w-4xl xl:gap-10 xl:px-4">
 
@@ -144,7 +146,7 @@ const Account = () => {
             name="full_name" 
             placeholder="Enter your full name" 
             onChange={e => setFull_name(e.target.value)}
-            defaultValue={accountData?.full_name}
+            defaultValue={userAccountData?.full_name}
           />
         </div>
 
@@ -155,7 +157,7 @@ const Account = () => {
               name="username" 
               placeholder="Enter your username" 
               type="text" 
-              defaultValue={accountData?.username}
+              defaultValue={userAccountData?.username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -166,7 +168,7 @@ const Account = () => {
               name="email" 
               placeholder="Enter your email" 
               type="email" 
-              defaultValue={accountData?.email}
+              defaultValue={userAccountData?.email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -185,7 +187,7 @@ const Account = () => {
           }}>
             <SelectValue 
               className='text-black bg-white' 
-              placeholder={accountData ? accountData?.country : 'Select country'}
+              placeholder={userAccountData ? userAccountData?.country : 'Select country'}
             />
           </SelectTrigger>
           <SelectContent className='bg-white text-black'>
@@ -241,7 +243,7 @@ const Account = () => {
 
             <Input
               name="phone"
-              defaultValue={accountData?.phone}
+              defaultValue={userAccountData?.phone}
               type='tel'
               placeholder="Enter your country" 
               onChange={e => setPhone(e.target.value)}
@@ -259,7 +261,7 @@ const Account = () => {
               name='date_of_birth' 
               placeholder="Select your date of birth"  
               onChange={e => setDate_of_birth(e.target.value)}
-              defaultValue={accountData?.date_of_birth}
+              defaultValue={userAccountData?.date_of_birth}
             />
           </div>
           
@@ -267,10 +269,10 @@ const Account = () => {
             <Label htmlFor="gender">Gender</Label>
             <Select 
               name='gender'
-              defaultValue={accountData?.gender}
+              defaultValue={userAccountData?.gender}
             >
               <SelectTrigger className="w-full ">
-                <SelectValue placeholder={accountData ? accountData?.gender : 'Select gender' } className='text-black'/>
+                <SelectValue placeholder={userAccountData ? userAccountData?.gender : 'Select gender' } className='text-black'/>
               </SelectTrigger>
               <SelectContent className="bg-white text-black">
                 <SelectItem value="Male">Male</SelectItem>
@@ -287,7 +289,7 @@ const Account = () => {
             name="bio"
             placeholder="Enter your bio" 
             onChange={e => setBio(e.target.value)}
-            defaultValue={accountData?.bio}
+            defaultValue={userAccountData?.bio}
             className="min-h-[100px] max-h-[120px]" 
           />
         </div>
@@ -298,7 +300,7 @@ const Account = () => {
             name="website" 
             type="text"
             placeholder="https://www.example.com"
-            defaultValue={accountData?.website}
+            defaultValue={userAccountData?.website}
             onChange={(e) => setWebsite(e.target.value)}
           />
         </div>

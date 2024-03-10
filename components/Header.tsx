@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import AuthButton from "./AuthButton";
+import AuthButton from "../app/SComponents/AuthButton";
 import Link from "next/link";
 
 const Header = async () => {

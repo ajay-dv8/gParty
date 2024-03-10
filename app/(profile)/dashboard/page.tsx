@@ -1,12 +1,10 @@
-
-import Account from "@/components/dashboardTabs/account"
-import DashCards from "@/components/dashboardTabs/dashCards"
-import Profile from "@/components/dashboardTabs/profile"
-import Settings from "@/components/dashboardTabs/settings"
 import Header from "@/components/header"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import DashView from "@/components/dashboardTabs/dashPages"
+import DashPages from "@/components/dashboardTabs/dashPages"
 
 const page = () => {
+  
   return (
     <div className="w-full">
       <div className="w-full sticky top-0 z-50">
@@ -42,25 +40,7 @@ const page = () => {
           <span className="px-8"></span>
 
           <div className="w full md:flex-[80%] pt-8">
-            <TabsContent value="dashboard">
-              <DashCards />
-            </TabsContent>
-
-            <TabsContent value="profile">
-              <Profile/>
-            </TabsContent>
-
-            <TabsContent value="account" >
-              <Account/>
-            </TabsContent>
-
-            <TabsContent value="settings">
-              <Settings/>
-            </TabsContent>
-
-            <TabsContent value="notification">
-            <DashCards />
-            </TabsContent>
+            <DashPages/>
           </div>
         </Tabs>
 

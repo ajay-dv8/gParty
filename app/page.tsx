@@ -1,5 +1,5 @@
 import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
+import AuthButton from "./SComponents/AuthButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
