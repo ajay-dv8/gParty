@@ -7,8 +7,12 @@ import { useEffect, useState } from 'react'
 import { fetchAccount } from '@/app/routes/fetchAccount/route';
 import { updateAccount } from '@/app/routes/updateAccount/route';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { error } from 'console';
-import Image from 'next/image';
+ import Image from 'next/image';
+
+interface Country {
+  name?: string;
+  // other properties...
+}
 
 const Account = () => {
 
@@ -26,11 +30,9 @@ const Account = () => {
     countries: [],
     errorMessage: ''
   });
-  const [selectedCountry, setSelectedCountry] = useState();
-
+  
   const [accountData, setAccountData] = useState<any | undefined>({});
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     // fetch country details 
@@ -45,6 +47,7 @@ const Account = () => {
         const countryUrl = `https://restcountries.com/v3.1/all`
         const response = await fetch(countryUrl);
         const data = await response.json();
+        console.log('countryDataIs', data);
   
         setCountry({
           ...country,
@@ -62,7 +65,7 @@ const Account = () => {
     fetchCountry();
   }, []);
   
-
+  // fetch accountData
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -77,18 +80,42 @@ const Account = () => {
   }, []);
 
   const { loading, errorMessage, countries } = country;
-  // console.log("loading", loading);
-  // console.log("countries", countries);
-  // console.log("errorMessage", errorMessage);
+  console.log("loading", loading);
+  console.log("countries", countries);
+  console.log("errorMessage", errorMessage);
+
+  const [selectedCountry, setSelectedCountry] = useState();
 
   // find selectedCountry data
-  const searchSelectedCountry:any = countries.find((obj: string | any) => {
-    if (obj.name.common === selectedCountry) {
+  const getSelectedCountry: any = countries.find((countries: any) => {
+    if (countries?.name.common === selectedCountry) {
       return true;
     }
     return false;
   });
-  console.log('searchSelectedCountry', searchSelectedCountry);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const getSelectedCountry: any = countries.find((countries: any) => {
+        if (countries?.name.common === selectedCountry) {
+          return true;
+        }
+        return false;
+      });
+      console.log('getSelectedCountry:', getSelectedCountry);
+    }
+  }, [selectedCountry]);
+
+
+  const handleSubmit = async (event: { preventDefault: () => void; } | any) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(event.target);
+    // Call your createParty function here
+    await updateAccount(formData);
+    setIsLoading(false);
+  }
+
   
   return (
     <div className="container grid gap-4 px-4 mx-auto md:gap-8 lg:max-w-4xl xl:gap-10 xl:px-4">
@@ -107,7 +134,7 @@ const Account = () => {
       </div>
 
       <form 
-        action={updateAccount}
+        onSubmit={handleSubmit}
         className="space-y-4"
       >
         
@@ -151,13 +178,22 @@ const Account = () => {
           <Select
             name='selectedCountry'
             defaultValue={selectedCountry}
-            //onChange={(e) = setSelectedCountry(e.target.value)}
           >
-          <SelectTrigger className="w-full">
-            <SelectValue className='text-black bg-white' placeholder={accountData ? accountData?.country : 'Select country'}/>
+          <SelectTrigger className="w-full" onChange={(e:any) => {
+            setSelectedCountry(e.target.value);
+            console.log('selectedCountry:', e.target.value);
+          }}>
+            <SelectValue 
+              className='text-black bg-white' 
+              placeholder={accountData ? accountData?.country : 'Select country'}
+            />
           </SelectTrigger>
           <SelectContent className='bg-white text-black'>
-            {countries.map((item: string | any, index)  => {
+            {countries
+              .filter((item: any) => item.region === 'Africa')
+              .sort((a: any, b: any) => a.name.common
+              .localeCompare(b.name.common))
+              .map((item: string | any, index) => {
               return (
                 <SelectItem key={index} value={item.name.common}>
                   {item.name.common}
@@ -170,8 +206,39 @@ const Account = () => {
 
           <div className="space-y-2">
             <Label htmlFor='phone'>Phone</Label>
-            <div className="flex">
-              <Image alt='' src={searchSelectedCountry ? searchSelectedCountry.flags.png : ''} />
+
+            <div className="flex flex-row justify-between">
+            {/* <Image 
+              alt='' 
+              width={50} 
+              height={35}
+              src={getSelectedCountry && getSelectedCountry.flags.png } 
+            /> */}
+            {/* <Select
+            name='selectedCountry'
+            defaultValue={'vle'}
+            >
+
+            <SelectTrigger className="w-full">
+              <SelectValue 
+                className='text-black bg-white' 
+                placeholder={ 'code'}
+              />
+            </SelectTrigger>
+
+            <SelectContent className='bg-white text-black'>
+            {countries
+              .filter((item: any) => item.region === 'Africa')
+              .map((item:string|any, index) => {
+              return (
+                <SelectItem key={index} value={item.name.common}>
+                  {item.idd.root + item.idd.suffixes}
+                </SelectItem>
+              )
+            })}
+            </SelectContent>
+            </Select> */}
+
             <Input
               name="phone"
               defaultValue={accountData?.phone}
@@ -180,6 +247,7 @@ const Account = () => {
               onChange={e => setPhone(e.target.value)}
             />
             </div>
+
           </div>
         </div>
 
@@ -228,8 +296,8 @@ const Account = () => {
           <Label htmlFor="website">Website</Label>
           <Input 
             name="website" 
-            type="text" 
-            placeholder="https://www.example.com" 
+            type="text"
+            placeholder="https://www.example.com"
             defaultValue={accountData?.website}
             onChange={(e) => setWebsite(e.target.value)}
           />
@@ -240,7 +308,7 @@ const Account = () => {
             type='submit'
             //onClick={() => setIsLoading(true)}
             disabled={isLoading}
-            className='w-[50%]'
+            className='w-[50%] m-2 bg-blue-500 hover:bg-blue-400 text-white duration-200'
           >
             {isLoading ? 'Updating account...' : 'Update account'}
           </Button>

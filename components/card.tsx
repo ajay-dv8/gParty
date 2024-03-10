@@ -1,12 +1,11 @@
 import Image from "next/image"
-import { JsxElement } from "typescript";
 import { cn } from "@/lib/utils"
 
 type CardType = {
   title?: string;
   description?: string;
   category?: string;
-  icon?: JsxElement | any;
+  icon?: any;
   className?: string | undefined;
 }
 
@@ -28,6 +27,7 @@ const Card = ({icon, title, description, category, className}: CardType) => {
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-0 pb-0">
         {description}
       </p>    
+      
     </div>
   )
 }

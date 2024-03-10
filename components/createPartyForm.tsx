@@ -6,6 +6,7 @@ import { Label } from "./ui/label"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { useToast } from "./ui/use-toast"
 import { createParty } from "@/app/routes/createParty/route"
+import GenerateInvitation from "@/app/SComponents/generateInvitation"
 
 const CreatePartyForm = () => {
 
@@ -15,79 +16,21 @@ const CreatePartyForm = () => {
   const [disbursement, setDisbursement] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast()
 
-  const toastSuccess = ():string | any => {
-    toast({
-      title: "Success",
-      description: "Your party has been created.",
-    })
-  };
-
-  const toastError = () => {
-    toast({
-      title: "Failed",
-      description: "Failed creating party.",
-    })
-  };
-
-  //  const createParty = async (event: React.FormEvent<HTMLFormElement> | any) => {
-  //    event.preventDefault();
-  //    setIsLoading(true);
- 
-  //    const supabase = createClient(
-  //      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  //      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  //    );
-
-  //    const formData = new FormData(event.target);
-  //    const caption = formData.get('caption') as string;
-  //    const guest_count = formData.get('guest_count') as string;
-  //    const party_budget = formData.get('party_budget') as string;
-  //    const disbursement = formData.get('disbursement') as string;
-  //    const amount_per_guest = formData.get('amount_per_guest') as string;
-
-  //    try {
-  //      const { data, error } = await supabase
-  //      .from('create_party')
-  //      .insert([
-  //        { 
-  //          caption          : caption, 
-  //          guest_count      : guest_count, 
-  //          party_budget     : party_budget, 
-  //          disbursement     : disbursement,
-  //          amount_per_guest : amount_per_guest,
-  //        }
-  //      ])
-  //      .select('*');
-  //      console.log('create party data', data);
-
-  //      // Check if there was an error during the update process
-  //      if (error) {
-  //        console.error('Error inserting data: ', error);
-  //        toastError();
-  //      } else {
-  //        console.log('Data inserted successfully: ', data);
-  //      }
-
-  //    } catch (error) {
-  //      console.error('Error inserting data: ', error);
-  //    }
-
-  //   setCaption('');
-  //   setGuest_count('');
-  //   setParty_budget('');
-  //   setDisbursement('');
-
-  //   setIsLoading(false);
-  //   toastSuccess();
-    
-  //  }
+  const handleSubmit = async (event: { preventDefault: () => void } | any) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(event.target);
+    // Call your createParty function here
+    await createParty(formData);
+    setIsLoading(false);
+  }
+  
 
   return (
     <>
     <form
-      action={createParty}
+      onSubmit={handleSubmit}
        className="w-full flex flex-col gap-y-8"
     >
       <div className="flex flex-col gap-2">
@@ -124,11 +67,11 @@ const CreatePartyForm = () => {
           <Label htmlFor="disbursement">Disbursement</Label>
           <RadioGroup defaultValue="share_equal" name="disbursement"  className="flex flex-row">
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="share_equal" id="r1" />
+            <RadioGroupItem value="Share Equal" id="r1" />
             <Label htmlFor="r1">Share equally</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="custom_amount" id="r2" />
+            <RadioGroupItem value="Custom Amount" id="r2" />
             <Label htmlFor="r2">Custom amount</Label>
           </div>
           </RadioGroup>
@@ -152,9 +95,10 @@ const CreatePartyForm = () => {
         >
           {isLoading ? 'Generating invitation...' : 'Generate invitation'}
         </Button>  
-      </div>    
-
+      </div>   
+      
     </form>
+    
     </>
   )
 }

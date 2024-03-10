@@ -1,5 +1,6 @@
 'use server';
 import { createClient } from "@/utils/supabase/server"
+import { error } from "console";
 import { redirect } from "next/navigation"
 
 export async function createParty(formData: FormData) {
@@ -16,11 +17,11 @@ export async function createParty(formData: FormData) {
   
   // Check if the user is authenticated
   if (!user) {
-    console.error("Could not authenticate user");
+    console.error("Could not authenticate user", error);
     return redirect('/createParty?message=Could not authenticate user');
   }
 
-  // Update the user's profile data in the 'profiles' table
+  // Update the user's profile data in the 'profiles' table 
   try {
     const { data, error } = await supabase
     .from('create_party')
@@ -34,13 +35,15 @@ export async function createParty(formData: FormData) {
       }
     ])
     .select('*');
-    console.log('create party data', data);
 
     // Check if there was an error during the update process
     if (error) {
       console.error('Error inserting data: ', error);
     } else {
-      console.log('Data inserted successfully: ', data);
+      // console.log('Data inserted successfully: ', data);
+      // Redirect to the generate invitation page with a success message
+      // return redirect(`/generateInvite?id=${data[0].id}&message=Successfully created your party!`);
+      return redirect(`/generateInvite?id=${data[0].id}&message=Successfully created your party!`);
     }
 
   } catch (error) {
