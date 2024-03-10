@@ -1,12 +1,11 @@
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
-import { useToast } from "./ui/use-toast"
 import { createParty } from "@/app/routes/createParty/route"
-import GenerateInvitation from "@/app/SComponents/generateInvitation"
+import { useRouter } from "next/navigation"
 
 const CreatePartyForm = () => {
 
@@ -16,17 +15,23 @@ const CreatePartyForm = () => {
   const [disbursement, setDisbursement] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event: { preventDefault: () => void } | any) => {
     event.preventDefault();
-    setIsLoading(true);
-    const formData = new FormData(event.target);
-    // Call your createParty function here
-    await createParty(formData);
+     try {
+      setIsLoading(true);
+      const formData = new FormData(event.target);
+      // Call your createParty function here
+      await createParty(formData);
+      router.push('/generateInvite');
+     } catch (error) {
+       console.error("Failed to submit the form");
+     }
+
     setIsLoading(false);
   }
   
-
   return (
     <>
     <form
@@ -104,3 +109,7 @@ const CreatePartyForm = () => {
 }
 
 export default CreatePartyForm
+function showSuccessMessage(arg0: string) {
+  throw new Error("Function not implemented.")
+}
+

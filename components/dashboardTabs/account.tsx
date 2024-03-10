@@ -4,7 +4,6 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { useEffect, useState } from 'react'
-import { fetchAccount } from '@/app/routes/fetchAccount/route';
 import { updateAccount } from '@/app/routes/updateAccount/route';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 

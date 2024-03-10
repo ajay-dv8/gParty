@@ -16,7 +16,6 @@ export async function fetchAccount() {
         .from('profiles')
         .select('*')
         .eq('id', user?.id)
-        console.log('fetch Data', data)  
 
         if (error) {
           throw error
